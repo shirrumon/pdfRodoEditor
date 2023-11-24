@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import pdf.TextReplacer
@@ -46,18 +47,22 @@ fun App() {
 @Composable
 fun processDataApplaying(file: File, callback: () -> Unit) {
     Row {
-        var companyLink: String = ""
-        var companyName: String = ""
+        val companyLink = remember { mutableStateOf(TextFieldValue()) }
+        val companyName = remember { mutableStateOf(TextFieldValue()) }
 
-        TextField("Link to work", onValueChange = {
-            companyLink = it
+        TextField(companyLink.value, onValueChange = {
+            companyLink.value = it
         })
-        TextField("CompanyName", onValueChange = {
-            companyName = it
+        TextField(companyName.value, onValueChange = {
+            companyName.value = it
         })
 
         Button(onClick = {
-            val textReplacer = TextReplacer(file.path, companyLink, companyName)
+            val textReplacer = TextReplacer(
+                file.path,
+                companyLink.value.text,
+                companyName.value.text)
+
             textReplacer.replaceText(file.path)
 
             callback()
