@@ -1,4 +1,5 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
@@ -46,28 +47,37 @@ fun App() {
 
 @Composable
 fun processDataApplaying(file: File, callback: () -> Unit) {
-    Row {
+    Column {
         val companyLink = remember { mutableStateOf(TextFieldValue()) }
         val companyName = remember { mutableStateOf(TextFieldValue()) }
 
-        TextField(companyLink.value, onValueChange = {
-            companyLink.value = it
-        })
-        TextField(companyName.value, onValueChange = {
-            companyName.value = it
-        })
+        Row {
+            Text("Link to offer")
+            TextField(companyLink.value, onValueChange = {
+                companyLink.value = it
+            })
+        }
 
-        Button(onClick = {
-            val textReplacer = TextReplacer(
-                file.path,
-                companyLink.value.text,
-                companyName.value.text)
+        Row {
+            Text("Company name")
+            TextField(companyName.value, onValueChange = {
+                companyName.value = it
+            })
+        }
 
-            textReplacer.replaceText(file.path)
+        Row {
+            Button(onClick = {
+                val textReplacer = TextReplacer(
+                    file.path,
+                    companyLink.value.text,
+                    companyName.value.text)
 
-            callback()
-        }) {
-            Text("Prepare pdf")
+                textReplacer.replaceText(file.path)
+
+                callback()
+            }) {
+                Text("Prepare pdf")
+            }
         }
     }
 }
